@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>miamApp | Accueil</title>
+
+  <link rel="shortcut icon" href="http://localhost:3000/images/favicon.png">
+  <link rel="apple-touch-icon" sizes="96x96" type="image/png" href="http://localhost:3000/images/favicon.png">
+
+  <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+</head>
+<body>
+  <div id="room-container">
+    <% Object.keys(rooms).forEach(room => { %>
+      <div><%= room %></div>
+      <a href="/<%= room %>">Join</a>
+    <% }) %>
+  </div>
+  <form action="/room" method="POST" autocomplete="off">
+    <input name="room" type="text" required>
+    <button type="submit">New Room</button>
+  </form>
+
+  <script>
+    const socket = io("http://localhost:3000");
+
+    socket.on("room-created", (room) => {
+      const roomElement = document.createElement("div");
+      roomElement.innerText = room;
+      const roomLink = document.createElement("a");
+      roomLink.href = `/${room}`;
+      roomLink.innerText = "join";
+      roomContainer.append(roomElement);
+      roomContainer.append(roomLink);
+    });
+  </script>
+</body>
+</html>

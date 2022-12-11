@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>miamApp | Room: <%= roomName %></title>
+    <script>
+      const roomName = "<%= roomName %>";
+    </script>
+
+    <link rel="shortcut icon" href="http://localhost:3000/images/favicon.png">
+    <link rel="apple-touch-icon" sizes="96x96" type="image/png" href="http://localhost:3000/images/favicon.png">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"/>
+
+    <!-- SCRIPTS -->
+    <script defer src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script defer src="/L.Polyline.measuredDistance.js"></script>
+    
+    <script defer src="http://localhost:3000/socket.io/socket.io.js"></script>
+    <script defer src="client.js"></script>
+    <style>
+      body {
+        padding: 0;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        font-family: Helvetica, sans-serif;
+      }
+
+      #message-container {
+        width: 30vw;
+      }
+
+      #message-container div {
+        background-color: #ccc;
+        padding: 5px;
+      }
+
+      #message-container div:nth-child(2n) {
+        background-color: #fff;
+      }
+
+      #send-container {
+        position: fixed;
+        padding-bottom: 30px;
+        bottom: 0;
+        left: 0;
+        background-color: white;
+        width: 30vw;
+        display: flex;
+      }
+
+      #message-input {
+        flex-grow: 1;
+      }
+
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+      }
+
+      #refreshButton {
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        z-index: 400;
+      }
+
+      #data {
+        position: absolute;
+        top: 40px;
+        right: 0px;
+        z-index: 400;
+        text-align: right;
+      }
+
+      body {
+        padding: 0;
+        margin: 0;
+      }
+
+      #map {
+        height: 100%;
+        width: 70vw;
+      }
+
+      .restos {
+        position: absolute;
+        bottom: 40px;
+        right: 0px;
+        z-index: 400;
+        text-align: right;
+      }
+      .restos .resto {
+        margin: 6px 0;
+        background-color: #fff;
+        color: #000;
+        cursor: pointer;
+        padding: 8px;
+        text-transform: capitalize;
+        font-size: 1rem;
+        border-top-left-radius: 12px;
+        border-bottom-left-radius: 12px;
+        font-weight: bold;
+      }
+
+      .my-custom-pin {
+        background-color: #FFF;
+        width: 2rem;
+        height: 2rem;
+        display: block;
+        left: -1rem;
+        top: 0.5rem;
+        position: relative;
+        border-radius: 50%;
+        border: 1px solid #000;
+        line-height: 2;
+        text-align: center;
+        font-weight: bold;
+        font-size: 1rem;
+      }
+
+      .calc-distance-live {
+        position: absolute;
+        top: 50px;
+        right: 0px;
+        z-index: 400;
+        text-align: right;
+        width: 200%;
+      }
+      .calc-distance-live > .calc-distance-phrase {
+        background-color: white;
+        padding: 8px;
+        border-top-left-radius: 12px;
+        border-bottom-left-radius: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="message-container"></div>
+    <form id="send-container">
+      <input type="text" id="message-input" />
+      <button type="submit" id="send-button">Send</button>
+    </form>
+
+    <section>
+      <div id="map"></div>
+
+      <div id="data">
+        <label for="">Speed (km/h)</label>
+        <input style="width: 50px" type="text" id="speed" value="5" />
+        <br />
+
+        <label for="distance">Distance (km)</label>
+        <input
+          style="width: 50px"
+          type="text"
+          id="distance"
+          value="0"
+          disabled
+        />
+        <br />
+
+        <label for="temps">Temps (h)</label>
+        <input style="width: 75px" type="text" id="temps" value="0" disabled />
+        <br />
+
+        <div class="calc-distance-live">
+          <p class="calc-distance-phrase">Miam à <strong class="arrivalTime">13:00</strong>, <strong class="client">Visitor</strong> doit partir à <strong class="departTime">00:00:00</strong></p>
+        </div>
+
+      </div>
+
+      <div class="restos">
+        <p>Restaurants :</p>
+        <div class="resto" data-position="48.89439127039193, 2.2271990776062016">Le Piano</div>
+        <div class="resto" data-position="48.894532343445704, 2.2231864929199223">Au Poulet Braise</div>
+        <div class="resto" data-position="48.8890019816731,  2.2312331199646">Aux Délices de Puteaux</div>
+      </div>
+    </section>
+  </body>
+</html>
